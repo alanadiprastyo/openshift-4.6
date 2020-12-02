@@ -7,5 +7,11 @@
 4. Bastion	= 1 (vCPU = 4, RAM = 8 GB, HDD = 120 GB)
 5. Helper	= 1 (vCPU = 4, RAM = 8 GB, HDD = 120 GB)
 
-- Network Requirement
+### Network Requirement
+1. Master 	(10.0.22.22-24 /24)
+2. Worker 	(10.0.22.25-27 /24)
+3. Bootstrap	(10.0.22.21 /24)
+4. Bastion	(10.0.22.20 /24)
+5. Helper	(10.0.22.18 /24)
 
+![Arch_OCP_4.X](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/topologi-ocp.png)
