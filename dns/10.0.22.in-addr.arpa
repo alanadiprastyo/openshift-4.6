@@ -1,0 +1,29 @@
+$TTL    1h
+$ORIGIN 22.0.10.IN-ADDR.ARPA.
+@  1h IN      SOA     bastion.lab-home.example.com. admin.lab-home.example.com. (
+                  101     ; Serial
+             604800     ; Refresh
+              86400     ; Retry
+            2419200     ; Expire
+             604800     ; Negative Cache TTL
+)
+
+; name servers - NS records
+    IN      NS      bastion.lab-home.example.com.
+
+
+; name servers - PTR records
+20    IN    PTR    bastion.lab-home.example.com.
+
+; OpenShift Container Platform Cluster - PTR records
+21    IN    PTR    ocp4-bootstrap.lab-home.example.com.
+22    IN    PTR    ocp4-control-plane-1.lab-home.example.com.
+23    IN    PTR    ocp4-control-plane-2.lab-home.example.com.
+24    IN    PTR    ocp4-control-plane-3.lab-home.example.com.
+25    IN    PTR    ocp4-compute-1.lab-home.example.com.
+26    IN    PTR    ocp4-compute-2.lab-home.example.com.
+27    IN    PTR    ocp4-compute-3.lab-home.example.com.
+
+18   IN    PTR    api.lab-home.example.com.
+18   IN    PTR    api-int.lab-home.example.com.
+
