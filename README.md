@@ -15,3 +15,9 @@
 5. Helper	(10.0.22.18 /24)
 
 ![Arch_OCP_4.X](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/topologi-ocp.png)
+
+## Chapter 2. Set DNS (A and PTR Record) - Helper Node
+Configure A Record & PTR Record on Bind :
+```
+
+```
