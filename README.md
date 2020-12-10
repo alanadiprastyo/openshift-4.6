@@ -17,7 +17,24 @@
 ![Arch_OCP_4.X](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/topologi-ocp.png)
 
 ## Chapter 2. Set DNS (A and PTR Record) - Helper Node
-Configure A Record & PTR Record on Bind :
+Configure Bind Server :
 ```
-
+root@helper# git clone https://github.com/alanadiprastyo/openshift-4.6.git
+root@helper# yum -y install bind bind-utils
+root@helper# setenforce 0
+root@helper# cp openshift4.6/dns/named.conf /etc/named.conf
+```
+Configure A Record :
+```
+root@helper# cp openshift4.6/dns/lab-home.example.com /var/named/
+```
+Configure PTR Record :
+```
+root@helper# cp openshift4.6/dns/10.0.22.in-addr.arpa  /var/named/
+```
+Restart Service Bind :
+```
+root@helper# systemctl restart named
+root@helper# systemctl enable named
+root@helper# systemctl status named
 ```
