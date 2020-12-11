@@ -150,3 +150,48 @@ Download RHCOS OVA (Template VM) :
 
 https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-vmware.x86_64.ova
 
+
+## Chapter 6. Prepare HTTP server on Helper Node
+```
+root@helper# yum -y install httpd
+```
+
+Change the port Listen to **Port 8000** 
+```
+root@helper# cp openshift-4.6/httpd/httpd.conf /etc/httpd/conf/httpd.conf
+```
+
+Start Service httpd
+```
+root@helper# systemctl start httpd
+root@helper# systemctl enable httpd
+root@helper# systemctl status httpd
+```
+
+## Chapter 7. Preprare DNSMasq for DHCP Server
+```
+root@helper# yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+root@helper# yum -y install dnsmasq tree python36 jq oniguruma
+```
+
+Disable DNS Service on DNSMasq `port=0`
+```
+vi /etc/dnsmasq.conf
+...
+port=0
+...
+```
+
+Setting DHCP Server with Static IP use Mac Address
+```
+root@helper# cp openshift-4.6/dnsmasq/dnsmasq-pxe.conf /etc/dnsmasq.d/dnsmasq-pxe.conf
+```
+
+Start Service DNSMasq
+```
+root@helper# systemctl start dnsmasq
+root@helper# systemctl enable dnsmasq
+root@helper# systemctl status dnsmasq
+```
+
+
