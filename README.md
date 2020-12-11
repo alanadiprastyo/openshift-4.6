@@ -138,11 +138,11 @@ Click Redhat Openshift Container Platform
 and Choose Run on Vmware VSphere
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-vmware.png)
 
-Download Openshift Installer :
+Download Openshift Installer - Bastion Node:
 
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
 
-Download CLI (oc client & kubectl) :
+Download CLI (oc client & kubectl) - Bastion Node:
 
 https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
 
@@ -193,5 +193,86 @@ root@helper# systemctl start dnsmasq
 root@helper# systemctl enable dnsmasq
 root@helper# systemctl status dnsmasq
 ```
+
+## Chapter 8. Prepare Ignition File - Bastion Node
+### Create ssh-keygen
+```
+root@bastion# ssh-keygen -t rsa -b 4096 -N '' 
+```
+
+### Create Folder Installer
+```
+root@bastion# mkdir -p lab-home/{installer,ocp}
+root@bastion# cd /root/lab-home/installer
+root@bastion# wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
+root@bastion# wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
+root@bastion# tar zxvf openshift-install-linux.tar.gz openshift-client-linux.tar.gz
+root@bastion# cp openshift-install oc kubectl /usr/bin/
+```
+
+### Manually Create the installation conf file
+Please update the credential pull secret : (Sample install-config.yaml in openshift-4.6/install-config/install-config-UPDATE_THIS_FILE.yaml)
+
+```
+root@bastion# cat install-config.yaml
+```
+
+```
+apiVersion: v1
+baseDomain: example.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+metadata:
+  name: lab-home
+networking:
+  clusterNetworks:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  vsphere:
+    vcenter: lab-vcenter.example.com
+    username: administrator@vsphere.local
+    password: RAHASIADONG
+    datacenter: DATACENTER
+    defaultDatastore: datastore1
+    folder: "/DATACENTER/vm/ngoprek"
+fips: false
+pullSecret: '<isikan pull Secret dari cloud.redhat.com>'
+sshKey: '<isikan file /root/.ssh/id_rsa.pub>'
+```
+
+Copy file install-config.yaml to **/root/lab-home/ocp**
+```
+root@bastion# cd /root/lab-home/ocp
+root@bastion# cp openshift-4.6/install-config/install-config-UPDATE_THIS_FILE.yaml install-config.yaml
+```
+
+### Create Manifests from file install-config.yaml
+```
+root@bastion# openshift-install create manifests
+```
+Example Output
+```
+INFO Consuming Install Config from target directory
+WARNING Making control-plane schedulable by setting MastersSchedulable to true for Scheduler cluster settings
+```
+
+### Remove the kubernetes manifest files that define the control plane machine and compute machine
+```
+rm -f openshift/99_openshift-cluster-api_master-machines-*.yaml openshift/99_openshift-cluster-api_worker-machineset-*.yaml
+```
+
+### Modify the manifests/cluster-scheduler-02-config.yml Kubernetes manifest file to prevent pods from being schedule on the control plane machines:
+- Open the manifests/cluster-scheduler-02-config.yml file
+- Locate the **mastersSchedulable** parameter and set its value to **False**.
 
 
