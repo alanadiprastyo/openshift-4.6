@@ -1,0 +1,31 @@
+apiVersion: v1
+baseDomain: example.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+metadata:
+  name: lab-home
+networking:
+  clusterNetworks:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  vsphere:
+    vcenter: lab-vcenter.example.com
+    username: administrator@vsphere.local
+    password: RAHASIADONG
+    datacenter: DATACENTER
+    defaultDatastore: datastore1
+    folder: "/DATACENTER/vm/ngoprek"
+fips: false
+pullSecret: '<isikan pull Secret dari cloud.redhat.com>'
+sshKey: '<isikan file /root/.ssh/id_rsa.pub>'
+
