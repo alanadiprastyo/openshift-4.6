@@ -106,5 +106,13 @@ Click Redhat Openshift Container Platform
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-deploy.png)
 and Choose Run on Vmware VSphere
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-vmware.png)
-Choose User-provisioned infrastructure (UPI), Note: this tutorial use UPI, but you can use IPI to deploy OCP on VSphere
-![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/vmware-upi.png)
+
+Download Openshift Installer
+https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
+
+Download CLI (oc client & kubectl)
+https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
+
+Download RHCOS OVA (Template VM)
+https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-vmware.x86_64.ova
+
