@@ -22,15 +22,15 @@ Configure Bind Server :
 root@helper# git clone https://github.com/alanadiprastyo/openshift-4.6.git
 root@helper# yum -y install bind bind-utils
 root@helper# setenforce 0
-root@helper# cp openshift4.6/dns/named.conf /etc/named.conf
+root@helper# cp openshift-4.6/dns/named.conf /etc/named.conf
 ```
 Configure A Record :
 ```
-root@helper# cp openshift4.6/dns/lab-home.example.com /var/named/
+root@helper# cp openshift-4.6/dns/lab-home.example.com /var/named/
 ```
 Configure PTR Record :
 ```
-root@helper# cp openshift4.6/dns/10.0.22.in-addr.arpa  /var/named/
+root@helper# cp openshift-4.6/dns/10.0.22.in-addr.arpa  /var/named/
 ```
 Restart Service Bind :
 ```
@@ -78,3 +78,33 @@ nameserver 10.0.22.18
 nameserver 10.0.22.238
 ```
 NOTE: Update file `/var/named/lab-home.example.com and 10.0.22.in-addr.arpa` be adapted to your environment 
+
+## Chapter 4. Set HAProxy as Load Balancer
+```
+root@helper# yum -y install haproxy
+root@helper# cp openshift-4.6/haproxy/haproxy.cfg /etc/haproxy/
+```
+Please edit IP Address for Bootstrap, Master and Router (Worker).
+You can check file conf **/etc/haproxy/haproxy.cfg**
+
+```
+Port 6443 : Bootstrap and Master ( API)
+Port 22623 : Bootstrap and Master ( machine config)
+Port 80 : Router-infra ( ingress http)
+Port 443 : Router-infra ( ingress https)
+Port 9000 : GUI for HAProxy
+```
+
+## Chapter 5. Preparation Installation Redhat CoreOS
+Before you install openshift 4, you must create redhat account at cloud.redhat.com
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/cloud-redhat.png)
+Choose Red Hat Openshift Cluster Manager
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-4.png)
+Click Create Cluster
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/create-cluster.png)
+Click Redhat Openshift Container Platform
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-deploy.png)
+and Choose Run on Vmware VSphere
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhocp-vmware.png)
+Choose User-provisioned infrastructure (UPI), Note: this tutorial use UPI, but you can use IPI to deploy OCP on VSphere
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/vmware-upi.png)
