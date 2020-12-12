@@ -253,7 +253,7 @@ sshKey: '<isikan file /root/.ssh/id_rsa.pub>'
 Copy file install-config.yaml to **/root/lab-home/ocp**
 ```
 root@bastion# cd /root/lab-home/ocp
-root@bastion# cp openshift-4.6/install-config/install-config-UPDATE_THIS_FILE.yaml install-config.yaml
+root@bastion# cp /root/openshift-4.6/install-config/install-config-UPDATE_THIS_FILE.yaml install-config.yaml
 ```
 
 ### Create Manifests from file install-config.yaml
@@ -268,11 +268,57 @@ WARNING Making control-plane schedulable by setting MastersSchedulable to true f
 
 ### Remove the kubernetes manifest files that define the control plane machine and compute machine
 ```
-rm -f openshift/99_openshift-cluster-api_master-machines-*.yaml openshift/99_openshift-cluster-api_worker-machineset-*.yaml
+root@bastion# rm -f openshift/99_openshift-cluster-api_master-machines-*.yaml openshift/99_openshift-cluster-api_worker-machineset-*.yaml
 ```
 
 ### Modify the manifests/cluster-scheduler-02-config.yml Kubernetes manifest file to prevent pods from being schedule on the control plane machines:
 - Open the manifests/cluster-scheduler-02-config.yml file
 - Locate the **mastersSchedulable** parameter and set its value to **False**.
+
+### Obtain the Ignition config files
+```
+root@bastion# openshift-install create ignition-configs 
+```
+Output Example :
+```
+.
+├── auth
+│   ├── kubeadmin-password
+│   └── kubeconfig
+├── bootstrap.ign
+├── master.ign
+├── metadata.json
+└── worker.ign
+```
+
+## Chapter 9. Creating RHCOS machines in vSphere
+
+Before you install a cluster that contains user-provisioned infrastructure on VMware vSphere, you must create RHCOS machines on vSphere hosts for it to use.
+
+### Upload the bootstrap Ignition config file bootstrap.ign to your HTTP server
+
+### Save the following secondary Ignition config file for your bootstrap node to your computer as append-bootstrap.ign
+```
+root@bastion# cat /root/lab-home/ocp/append-bootstrap.ign
+{
+  "ignition": {
+    "config": {
+      "merge": [
+        {
+          "source": "http://10.0.22.20:8000/bootstrap.ign"
+        }
+      ]
+    },
+    "version": "3.1.0"
+  }
+}
+```
+
+### Convert Control Plane, Compute and Bootstrap ignition coonfig files to Base64 encoding
+```
+root@bastion# base64 -w0 /root/lab-home/ocp/master.ign > /root/lab-home/ocp/master.64
+root@bastion# base64 -w0 /root/lab-home/ocp/worker.ign > /root/lab-home/ocp/worker.64
+root@bastion# base64 -w0 /root/lab-home/ocp/append-bootstrap.ign > /root/lab-home/ocp/append-bootstrap.64
+```
 
 
