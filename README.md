@@ -337,3 +337,18 @@ https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/r
 1. Click the VMs and Templates views -> right click the name of datacenter -> click new folder -> new vm and template folder
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/template-vmware.png)
 
+2. Create template from OVA images -> from **Hosts and Cluster** right click your cluster name -> Deploy OVF Template
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/deploy-template-ovf.png)
+Select OVF tab, to specify the name of the RHCOS ova file that you downloaded
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/ovf-rhcos.png)
+**Select a name and folder tab** set a Virtual Machine name, such as rhcos-template
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/rhcos-template.png)
+Select compute resources 
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/resource-vmware.png)
+Select storage -> select thin provision or thick provision -> select datastore that you specified in your **install-config.yaml** 
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/storage-vmware.png)
+select network -> ready to complate finish
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/finish-template.png)
+
+
+
