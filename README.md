@@ -326,7 +326,9 @@ root@bastion# base64 -w0 /root/lab-home/ocp/append-bootstrap.ign > /root/lab-hom
 ```
 
 ### Copy file ignition to root directory httpd server on helper node
+```
 root@bastion# scp -R *.ign root@helper:/var/www/html/
+```
 
 ### Download RHCOS OVA image on [here](https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.6/)
 ```
@@ -364,4 +366,113 @@ Define the following paramters name and values :
 - *guestinfo.ignition.config.data.encoding* : Specify base64.
 - *disk.EnableUUID* : Specify TRUE
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/config-param-2.png)
+
+## Chapter 10. Creating the Cluster
+To create the OpenShift Container Platform cluster, you wait for the bootstrap process to complete on the machines that you provisioned by using the Ignition config files that you generated with the installation program.
+1. Running VM for Bootstrap and All VM Master
+2. Monitor  the bootstrap process
+```
+root@bastion# openshift-install wait-for bootstrap-complete --log-level=info 
+```
+or ssh to vm bootstrap to check process journal
+```
+root@bastion# ssh core@bootstrap
+```
+
+Example Output if process complate
+```
+INFO Waiting up to 30m0s for the Kubernetes API at https://api.lab-home.example.com:6443...
+INFO API v1.19.0 up
+INFO Waiting up to 30m0s for bootstrapping to complete...
+INFO It is now safe to remove the bootstrap resources
+```
+3. After bootstrap process is complete, remove the bootstrap machine from the load balancer.
+
+### Logging in to the cluster
+export the kubeadmin credentials
+```
+root@bastion# export KUBECONFIG=/root/lab-home/ocp/auth/kubeconfig 
+```
+verify you can run oc commands successfully using the exported configuration :
+```
+root@bastion# oc whoami
+```
+Example Output:
+```
+system:admin
+```
+
+### Approving the CSRs of the machines (Infra, worker and etc)
+When you add machine to a cluster, two pending certificate signing request (CSRs) are generate for each machine that you added. You mas confirm that these CSRs are approved or if necessary approve them yourslef
+- Check Nodes
+```
+[root@bastion ~]# oc get nodes
+NAME                                        STATUS   ROLES               AGE   VERSION
+ocp4-compute-1.lab-home.example.com         Ready    worker   		12m   v1.19.0+9f84db3
+ocp4-compute-2.lab-home.example.com         NotReady    worker   		12m   v1.19.0+9f84db3
+ocp4-compute-3.lab-home.example.com         NotReady    worker   		12m   v1.19.0+9f84db3
+ocp4-control-plane-1.lab-home.example.com   Ready    master              12m   v1.19.0+9f84db3
+ocp4-control-plane-2.lab-home.example.com   Ready    master              12m   v1.19.0+9f84db3
+ocp4-control-plane-3.lab-home.example.com   Ready    master              12m   v1.19.0+9f84db3
+```
+- Check CSRs
+```
+[root@bastion ~]#oc get csr
+NAME        AGE     REQUESTOR                                                                   CONDITION
+csr-8b2br   15m     system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending 
+csr-8vnps   15m     system:serviceaccount:openshift-machine-config-operator:node-bootstrapper   Pending
+csr-bfd72   5m26s   system:node:ocp4-compute-2.lab-home.example.com                       Pending 
+csr-c57lv   5m26s   system:node:ocp4-compute-3.lab-home.example.com                       Pending
+```
+- Approve CSRs them indivially
+```
+oc adm certificate approve <csr_name>
+```
+- or Approve all pending CSR 
+```
+oc get csr --no-headers | awk '{print $1}' | xargs oc adm certificate approve
+```
+
+### Initial Operator configuration
+After the control plane initializes, you must immediately configure some Operators so that they all become available.
+```
+watch -n5 oc get clusteroperators
+```
+Example Output:
+```
+NAME                                       VERSION AVAILABLE   PROGRESSING   DEGRADED   SINCE
+authentication                             4.6.0   True        False         False      3h56m
+cloud-credential                           4.6.0   True        False         False      29h
+cluster-autoscaler                         4.6.0   True        False         False      29h
+config-operator                            4.6.0   True        False         False      6h39m
+console                                    4.6.0   True        False         False      3h59m
+csi-snapshot-controller                    4.6.0   True        False         False      4h12m
+dns                                        4.6.0   True        False         False      4h15m
+etcd                                       4.6.0   True        False         False      29h
+image-registry                             4.6.0   True        False         False      3h59m
+ingress                                    4.6.0   True        False         False      4h30m
+insights                                   4.6.0   True        False         False      29h
+kube-apiserver                             4.6.0   True        False         False      29h
+kube-controller-manager                    4.6.0   True        False         False      29h
+kube-scheduler                             4.6.0   True        False         False      29h
+kube-storage-version-migrator              4.6.0   True        False         False      4h2m
+machine-api                                4.6.0   True        False         False      29h
+machine-approver                           4.6.0   True        False         False      6h34m
+machine-config                             4.6.0   True        False         False      3h56m
+marketplace                                4.6.0   True        False         False      4h2m
+monitoring                                 4.6.0   True        False         False      6h31m
+network                                    4.6.0   True        False         False      29h
+node-tuning                                4.6.0   True        False         False      4h30m
+openshift-apiserver                        4.6.0   True        False         False      3h56m
+openshift-controller-manager               4.6.0   True        False         False      4h36m
+openshift-samples                          4.6.0   True        False         False      4h30m
+operator-lifecycle-manager                 4.6.0   True        False         False      29h
+operator-lifecycle-manager-catalog         4.6.0   True        False         False      29h
+operator-lifecycle-manager-packageserver   4.6.0   True        False         False      3h59m
+service-ca                                 4.6.0   True        False         False      29h
+storage                                    4.6.0   True        False         False      4h30m
+```
+
+
+
 
