@@ -299,6 +299,10 @@ Before you install a cluster that contains user-provisioned infrastructure on VM
 
 ### Save the following secondary Ignition config file for your bootstrap node to your computer as append-bootstrap.ign
 ```
+root@bastion# cp /root/openshift-4.6/install-config/append-bootstrap.ign /root/lab-home/ocp/append-bootstrap.ign
+```
+
+```
 root@bastion# cat /root/lab-home/ocp/append-bootstrap.ign
 {
   "ignition": {
