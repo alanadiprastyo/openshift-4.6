@@ -325,4 +325,15 @@ root@bastion# base64 -w0 /root/lab-home/ocp/worker.ign > /root/lab-home/ocp/work
 root@bastion# base64 -w0 /root/lab-home/ocp/append-bootstrap.ign > /root/lab-home/ocp/append-bootstrap.64
 ```
 
+### Copy file ignition to root directory httpd server on helper node
+root@bastion# scp -R *.ign root@helper:/var/www/html/
+
+### Download RHCOS OVA image on [here](https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.6/)
+```
+https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-vmware.x86_64.ova
+```
+
+### in the vSphere client, create folder in your datacenter to store your VMs
+1. Click the VMs and Templates views -> right click the name of datacenter -> click new folder -> new vm and template folder
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/template-vmware.png)
 
