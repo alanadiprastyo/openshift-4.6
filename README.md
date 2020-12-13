@@ -350,5 +350,18 @@ Select storage -> select thin provision or thick provision -> select datastore t
 select network -> ready to complate finish
 ![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/finish-template.png)
 
+### Deploy VM for machine (Bootstrap, Master and Worker)
+Right click the template coreos -> click clone -> clone to virtual machine
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/clone-vm.png)
+Select a name and folder (create vm with name master-1/2/3 and worker-1/2/3) ->  Select a compute resource -> Select storage -> Customize hardware -> click vm options -> Advanced
 
+Optional: In the event of cluster performance issues, from the **Latency Sensitivity** list, select **High**.
+
+Edit Configuration on the configuration parameters -> click add configuration params
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/config-param.png)
+Define the following paramters name and values :
+- *guestinfo.ignition.config.data* : Paste the contents of the base64-encoded Ignition config file for this machine type.
+- *guestinfo.ignition.config.data.encoding* : Specify base64.
+- *disk.EnableUUID* : Specify TRUE
+![Cloud_Redhat](https://raw.githubusercontent.com/alanadiprastyo/openshift-4.6/master/gambar/config-param-2.png)
 
