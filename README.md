@@ -424,7 +424,7 @@ csr-8vnps   15m     system:serviceaccount:openshift-machine-config-operator:node
 csr-bfd72   5m26s   system:node:ocp4-compute-2.lab-home.example.com                       Pending 
 csr-c57lv   5m26s   system:node:ocp4-compute-3.lab-home.example.com                       Pending
 ```
-- Approve CSRs them indivially
+- Approve CSRs them individually
 ```
 oc adm certificate approve <csr_name>
 ```
