@@ -473,6 +473,6 @@ service-ca                                 4.6.0   True        False         Fal
 storage                                    4.6.0   True        False         False      4h30m
 ```
 
-## Chapter 11. [Configure Internal Registry](https://github.com/alanadiprastyo/openshift-4.6/tree/master/registry){:target="_blank"}
+## Chapter 11. [Configure Internal Registry](https://github.com/alanadiprastyo/openshift-4.6/tree/master/registry)
 
 
