@@ -50,5 +50,48 @@ oc get clusteroperator image-registry
 ```
 
 ## 2. Configuring registry storage use NFS Server
+*Procedure*
+1. verify pod registry
+```
+oc get pod -n openshift-image-registry
+```
+2. Check registry configuration
+```
+oc edit configs.imageregistry.operator.openshift.io
+...
+managementState: Managed
+...
+```
+**Note**
+change ManagementState from **Removed** to **Managed**
 
+3. Configuring NFS storage for Registry
+```
+# cat /etc/exports
+/mnt/data *(rw,sync,no_wdelay,no_root_squash,insecure,fsid=0)
+
+# exportfs -rv
+exporting *:/mnt/data
+```
+
+4. Provision the PV for the block storage device, and create a PVC for that volume.
+```
+oc create -f openshift-4.6/registry/pv-nfs.yaml
+oc create -f openshift-4.6/registry/pvc-nfs.yaml
+```
+
+5. Edit the registry configuration so that it references the correct PVC:
+```
+oc edit config.imageregistry.operator.openshift.io -o yaml
+...
+storage:
+  pvc:
+    claim: image-registry-storage
+...
+```
+
+6. check clusteroperator status
+```
+oc get clusteroperator image-registry
+```
 
