@@ -95,3 +95,17 @@ storage:
 oc get clusteroperator image-registry
 ```
 
+## 3. Exposing the registry
+1. Set DefaultRoute to True:
+```
+oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
+```
+
+2. Testing - Login with podman
+```
+HOST=$(oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}')
+podman login -u $(oc whoami) -p $(oc whoami -t) --tls-verify=false $HOST 
+```
+
+
+
