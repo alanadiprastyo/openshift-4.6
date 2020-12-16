@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-registry
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1024Gi
+  nfs:
+    path: /mnt/data
+    server: nfs-registry.lab-home.example.com
+  persistentVolumeReclaimPolicy: Recycle
